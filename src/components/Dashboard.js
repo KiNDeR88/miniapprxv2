@@ -1,117 +1,145 @@
-import React, { useState, useRef } from "react";
-import { QRCodeSVG } from "qrcode.react";
-import WheelOfFortune from "./WheelOfFortune";
+import React from "react";
+import QuestProgress from "./QuestProgress";
 
-const USER_ID = "ROZA-987654321";
-
-export default function Dashboard({ onNav }) {
-  const [showQR, setShowQR] = useState(false);
-  // swipe state для bottom sheet:
-  const [dragY, setDragY] = useState(0);
-  const startY = useRef(0);
-  const dragging = useRef(false);
-
-  function onTouchStart(e) {
-    if (e.touches && e.touches[0]) {
-      dragging.current = true;
-      startY.current = e.touches[0].clientY;
-      setDragY(0);
-    }
-  }
-  function onTouchMove(e) {
-    if (!dragging.current) return;
-    const delta = e.touches[0].clientY - startY.current;
-    if (delta > 0) setDragY(delta);
-  }
-  function onTouchEnd() {
-    dragging.current = false;
-    if (dragY > 80) {
-      setShowQR(false);
-    } else {
-      setDragY(0);
-    }
-  }
-
+export default function Dashboard() {
   return (
-    <div className="screen dashboard">
-      <div className="level-section">
-        <div className="level-badge">🌄</div>
-        <div>
-          <div className="level-title">Ваш уровень</div>
-          <div className="level-value">
-            <b>Traveler</b> — 1&nbsp;250 баллов
-          </div>
-          <div className="level-progressbar">
-            <div className="level-progressbar-fill" style={{ width: "70%" }} />
-          </div>
-          <div className="level-next">До следующего: 250 баллов</div>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#fff", // Только белый!
+        paddingBottom: 86,
+        position: "relative",
+        zIndex: 1
+      }}
+    >
+      {/* <div className="bg-gradient" />  — УДАЛЯЕМ! */}
+
+      <header className="header">
+        <img src="/logo.svg" alt="Роза Хутор" className="logo-rk" />
+        <div
+          style={{
+            fontWeight: 700,
+            fontSize: 28,
+            color: "var(--rk-dark)",
+            letterSpacing: ".01em"
+          }}
+        >
+          Роза Хутор
         </div>
-      </div>
+      </header>
 
-      <div className="action-grid">
-        <button className="action-btn accent" onClick={() => setShowQR(true)}>
-          Начислить баллы
-        </button>
-        <button className="action-btn">Потратить баллы</button>
-        <button className="action-btn" onClick={() => onNav && onNav("invite")}>
-          Пригласить друга
-        </button>
-        <button className="action-btn" onClick={() => onNav && onNav("achievements")}>
-          Мои награды
-        </button>
-      </div>
-
-      <div className="history-title">Последние операции</div>
-      <div className="history-cards">
-        <div className="history-card plus">
-          <span className="history-icon">🎿</span>
-          <div>
-            <div className="history-type">Баллы за подъемник</div>
-            <div className="history-date">12.07.2025</div>
-          </div>
-          <div className="history-points">+150</div>
-        </div>
-        <div className="history-card minus">
-          <span className="history-icon">🍰</span>
-          <div>
-            <div className="history-type">Потрачено в кафе</div>
-            <div className="history-date">11.07.2025</div>
-          </div>
-          <div className="history-points">-90</div>
-        </div>
-      </div>
-
-      {/* Колесо удачи на главном экране */}
-      <h2 style={{ margin: "34px 0 14px 0", color: "#8f6ae0" }}>Колесо удачи</h2>
-      <WheelOfFortune />
-
-      {showQR && (
-        <div className="bottom-sheet-overlay" onClick={() => setShowQR(false)}>
-          <div
-            className="bottom-sheet"
-            style={{
-              transform: `translateY(${dragY}px)`,
-              transition: dragging.current ? "none" : "transform 0.38s cubic-bezier(.42,0,.48,1.08)",
-            }}
-            onClick={e => e.stopPropagation()}
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
-            tabIndex={-1}
-          >
-            <div className="sheet-drag-bar" />
-            <h3>Ваш QR для начисления баллов</h3>
-            <QRCodeSVG value={USER_ID} size={160} />
-            <div className="qr-code-value">{USER_ID}</div>
-            <div className="modal-desc">
-              Покажите этот код кассиру для начисления бонусов.
+      <main style={{ maxWidth: 430, margin: "0 auto", padding: "1rem" }}>
+        {/* Пример карточки профиля */}
+        <div className="card" style={{ margin: "22px 0 26px 0", background: "#fff" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <img
+              src="/avatar-demo.png"
+              alt="avatar"
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 15,
+                border: "2.5px solid var(--rk-purple)"
+              }}
+            />
+            <div>
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize: 21,
+                  color: "var(--rk-dark)"
+                }}
+              >
+                Алексей Петров
+              </div>
+              <div
+                style={{
+                  fontWeight: 500,
+                  color: "var(--rk-blue)"
+                }}
+              >
+                Уровень: Traveler
+              </div>
             </div>
-            <button className="modal-close" onClick={() => setShowQR(false)}>
-              Закрыть
-            </button>
+          </div>
+          <div
+            style={{
+              margin: "16px 0 0 0",
+              background: "#f3edfa",
+              borderRadius: 14,
+              height: 8,
+              width: "100%",
+              overflow: "hidden"
+            }}
+          >
+            <div
+              style={{
+                width: "55%",
+                height: "100%",
+                borderRadius: 14,
+                background:
+                  "linear-gradient(90deg, #ff731f 0%, #915ee5 100%)"
+              }}
+            />
+          </div>
+          <div style={{ color: "#888", fontSize: 14, marginTop: 6 }}>
+            До следующего: <b>250 баллов</b>
           </div>
         </div>
-      )}
+
+        {/* Квест с прогрессом из достижений */}
+        <QuestProgress />
+
+        {/* История операций — примеры */}
+        <div className="card" style={{ background: "#fff" }}>
+          <div
+            style={{
+              fontWeight: 700,
+              color: "var(--rk-dark)",
+              fontSize: 18,
+              marginBottom: 7
+            }}
+          >
+            Последние операции
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 7
+            }}
+          >
+            <div
+              style={{
+                background: "#f8f5ff",
+                borderRadius: 14,
+                padding: "13px 12px",
+                display: "flex",
+                alignItems: "center",
+                gap: 10
+              }}
+            >
+              <span style={{ fontSize: 22 }}>⛷️</span>
+              <span style={{ flex: 1 }}>Баллы за подъемник</span>
+              <span style={{ color: "#23c27c", fontWeight: 700 }}>+150</span>
+            </div>
+            <div
+              style={{
+                background: "#fff4f4",
+                borderRadius: 14,
+                padding: "13px 12px",
+                display: "flex",
+                alignItems: "center",
+                gap: 10
+              }}
+            >
+              <span style={{ fontSize: 22 }}>🍰</span>
+              <span style={{ flex: 1 }}>Потрачено в кафе</span>
+              <span style={{ color: "#eb5957", fontWeight: 700 }}>-90</span>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

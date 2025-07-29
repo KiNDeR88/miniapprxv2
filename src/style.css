@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+:root {
+  --rk-dark: #050f58;
+  --rk-blue: #1c6dd0;
+  --rk-purple: #915ee5;
+  --rk-orange: #ff731f;
+  --rk-yellow: #ffe071;
+  --rk-pink: #ffe8ee;
+  --rk-bg: #f9f9fa;
+  --rk-gradient: linear-gradient(92deg, #915ee5 0%, #1c6dd0 100%);
+  --rk-card: #fff;
+  --rk-shadow: 0 4px 20px 0 #915ee519;
+  --rk-radius: 22px;
+  --rk-radius-big: 32px;
+}
+
+body {
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  background: var(--rk-bg);
+  color: var(--rk-dark);
+  min-height: 100vh;
+}
+
+.bg-gradient {
+  background: var(--rk-gradient);
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  left: 0;
+  top: 0;
+  opacity: 0.16;
+  pointer-events: none;
+}
+
+/* Card */
+.card {
+  background: var(--rk-card);
+  border-radius: var(--rk-radius-big);
+  box-shadow: var(--rk-shadow);
+  padding: 1.2rem 1.6rem;
+  margin: 0 0 1.1rem 0;
+}
+
+/* Кнопка основная */
+.btn-main {
+  background: var(--rk-gradient);
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+  border-radius: 17px;
+  padding: 16px 0;
+  width: 100%;
+  box-shadow: var(--rk-shadow);
+  transition: box-shadow .16s, background .18s;
+  cursor: pointer;
+}
+.btn-main:active,
+.btn-main:focus {
+  box-shadow: 0 2px 12px 0 #915ee53c;
+  outline: none;
+  background: linear-gradient(92deg, #6f3dcc 0%, #1c6dd0 100%);
+}
+.btn-main:disabled {
+  background: #ddd;
+  color: #888;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Bottom-tabs */
+.tabs-bar {
+  display: flex;
+  background: #fff;
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 0 8px 0 #915ee514;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding: 0.7rem 0 0.2rem 0;
+  justify-content: space-around;
+  z-index: 50;
+}
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #aaa;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 2px 8px 1px 8px;
+  border-radius: 14px;
+  transition: background .16s, color .14s;
+  cursor: pointer;
+}
+.tab-item.active {
+  background: var(--rk-gradient);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 3px 16px 0 #915ee517;
+}
+
+/* Header (логотип + название) */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: none;
+  padding: 18px 22px 4px 22px;
+}
+.logo-rk {
+  width: 48px;
+  height: 48px;
+  background: none;
+  object-fit: contain;
+}
+
+/* Модальные окна */
+.congrats-modal {
+  background: rgba(33,28,45,0.28);
+  position: fixed;
+  z-index: 90;
+  left: 0; top: 0; right: 0; bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(6px);
+  animation: modalshow .32s;
+}
+@keyframes modalshow { from{opacity:0;} to{opacity:1;} }
+.congrats-content {
+  background: #fff;
+  border-radius: var(--rk-radius-big);
+  padding: 2.3rem 1.5rem 2.1rem 1.5rem;
+  box-shadow: 0 6px 48px #915ee532;
+  min-width: 270px;
+  text-align: center;
+}
+
+.wheel-spin-btn {
+  background: var(--rk-gradient);
+  color: #fff;
+  font-size: 19px;
+  font-weight: 700;
+  border-radius: 16px;
+  border: none;
+  box-shadow: var(--rk-shadow);
+  padding: 16px 0;
+  width: 100%;
+  margin: 0;
+  transition: background .14s;
+  cursor: pointer;
+}
+.wheel-spin-btn:active { background: linear-gradient(92deg,#6f3dcc 0%,#1c6dd0 100%);}
+.wheel-spin-btn:disabled { background: #eee; color: #aaa; }
+
+.win-sector { filter: drop-shadow(0 0 12px #ffe071d0) brightness(1.08);}
+.win-icon { filter: drop-shadow(0 0 8px #ffefc2b2); }
+/* --- Карточки на внутренних страницах --- */
+.card {
+    background: var(--rk-card);
+    border-radius: var(--rk-radius-big);
+    box-shadow: var(--rk-shadow);
+    padding: 1.2rem 1.6rem;
+    margin: 1.5rem 0;
+    transition: box-shadow .2s;
+  }
+  
+  /* Заголовки на внутренних экранах */
+  .page-title {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 1.3rem;
+    color: var(--rk-dark);
+    letter-spacing: .01em;
+  }
+  
+  /* Текст-пояснения */
+  .page-desc {
+    color: #888;
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+  }
+  
+  /* Иконки для достижений */
+  .achievement-badge {
+    display: inline-block;
+    font-size: 2.2rem;
+    border-radius: 50%;
+    background: linear-gradient(92deg, #ff731f 0%, #915ee5 100%);
+    color: #fff;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 3px 16px #915ee52a;
+    padding: 10px 14px;
+  }
+  
+  .profile-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--rk-purple);
+    margin-bottom: 0.7rem;
+    background: #f3edfa;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .profile-data {
+    text-align: center;
+    font-size: 1.17rem;
+    font-weight: 500;
+    color: var(--rk-dark);
+  }
+  
+  .profile-level {
+    color: var(--rk-blue);
+    font-weight: 700;
+    margin-bottom: 0.7rem;
+  }
+  
+  @media (max-width: 600px) {
+    .card { padding: 1rem 0.6rem; }
+    .page-title { font-size: 1.2rem; }
+  }

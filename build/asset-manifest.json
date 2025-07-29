@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/miniapprx/static/css/main.1e8dcdb1.css",
+    "main.js": "/miniapprx/static/js/main.d8d88330.js",
+    "static/media/logo.webp": "/miniapprx/static/media/logo.83040bc4995e7a9174da.webp",
+    "index.html": "/miniapprx/index.html",
+    "main.1e8dcdb1.css.map": "/miniapprx/static/css/main.1e8dcdb1.css.map",
+    "main.d8d88330.js.map": "/miniapprx/static/js/main.d8d88330.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1e8dcdb1.css",
+    "static/js/main.d8d88330.js"
+  ]
+}
