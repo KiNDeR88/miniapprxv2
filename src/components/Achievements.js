@@ -1,4 +1,5 @@
 import React from "react";
+import { useAchievements } from "../context/AchievementsContext";
 
 const LOCATIONS = [
   { key: "olympia", title: "Горная Олимпия", icon: <span style={{ fontSize: 33 }}>⛷️</span> },
@@ -6,14 +7,8 @@ const LOCATIONS = [
   { key: "plateau", title: "Роза Плато", icon: <span style={{ fontSize: 33 }}>🌲</span> }
 ];
 
-// В реальном проекте status берётся из БД/API
-const progress = {
-  olympia: true,
-  "2320": true,
-  plateau: false // Смените на true, чтобы протестировать завершение!
-};
-
 export default function Achievements() {
+  const { progress, updateLocation, resetProgress } = useAchievements();
   const done = Object.values(progress).filter(Boolean).length;
   const completed = done === LOCATIONS.length;
 
@@ -34,7 +29,7 @@ export default function Achievements() {
           letterSpacing: ".01em",
           lineHeight: 1.14
         }}>
-          Ваш прогресс квеста:
+          Прогресс квеста:
         </div>
         <div style={{
           display: "flex",
@@ -87,6 +82,24 @@ export default function Achievements() {
               >
                 {loc.title}
               </div>
+              {/* Временная кнопка для теста: выполнить локацию */}
+              {!progress[loc.key] && (
+                <button
+                  style={{
+                    marginTop: 8,
+                    fontSize: 14,
+                    padding: "3px 11px",
+                    borderRadius: 12,
+                    border: "1px solid #915ee5",
+                    background: "#fff",
+                    color: "#915ee5",
+                    cursor: "pointer"
+                  }}
+                  onClick={() => updateLocation(loc.key)}
+                >
+                  Отметить выполненным
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -191,6 +204,23 @@ export default function Achievements() {
             }
           `}
         </style>
+
+        {/* Кнопка сброса — для теста, можешь убрать */}
+        <button
+          style={{
+            marginTop: 18,
+            fontSize: 13,
+            padding: "3px 11px",
+            borderRadius: 12,
+            border: "1px solid #bbb",
+            background: "#f7f8ff",
+            color: "#aaa",
+            cursor: "pointer"
+          }}
+          onClick={resetProgress}
+        >
+          Сбросить квест (для теста)
+        </button>
       </div>
     </div>
   );

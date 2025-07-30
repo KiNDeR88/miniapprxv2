@@ -38,7 +38,6 @@ export default function QuestProgress() {
       >
         Квест: Купи в трёх локациях
       </div>
-      {/* ... (остальной код — как выше) */}
       <div
         style={{
           display: "flex",
@@ -96,8 +95,6 @@ export default function QuestProgress() {
           </div>
         ))}
       </div>
-
-      {/* Блок статусов */}
       <div
         style={{
           display: "flex",
@@ -125,7 +122,6 @@ export default function QuestProgress() {
           </div>
         ))}
       </div>
-      {/* Прогресс-бар */}
       <div
         style={{
           background: "#e3e8f7",
