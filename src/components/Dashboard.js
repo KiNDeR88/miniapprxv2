@@ -18,14 +18,12 @@ export default function Dashboard() {
     { id: "2", date: "2024-06-30", description: "Начисление за регистрацию", amount: 50 },
     { id: "3", date: "2024-06-27", description: "Потрачено в интернет-магазине", amount: -300 }
   ];
-
-  // Мок-квест (как отдельный блок — как раньше)
+  // Мок-квест
   const quest = {
     title: "Купи в 3-х разных локациях",
-    description: "Совершите покупки в 3 разных точках на курорте и получите награду.",
     progress: 2,
     goal: 3,
-    status: "В ожидании" // или "Выполнено"
+    status: "В ожидании"
   };
 
   // Для модалок
@@ -115,79 +113,40 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Квест-блок */}
-        <div className="card" style={{
-          marginBottom: 18,
-          background: "#fafaff",
-          padding: "1.1em 1em"
-        }}>
-          <div style={{
-            fontWeight: 700,
-            color: "#403688",
-            fontSize: 18,
-            marginBottom: 7
-          }}>
-            Квест: {quest.title}
-          </div>
-          <div style={{
-            marginBottom: 5,
-            color: "#666",
-            fontSize: 15
-          }}>
-            {quest.description}
-          </div>
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12
-          }}>
+        {/* Квест */}
+        {quest && (
+          <div className="card" style={{ marginBottom: 18, background: "#fafaff" }}>
             <div style={{
-              width: 42,
-              height: 42,
-              background: "#ece7ff",
-              borderRadius: 12,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 22
-            }}>🎯</div>
-            <div style={{ flex: 1 }}>
-              <div style={{
-                fontWeight: 600,
-                color: "#2a2673",
-                fontSize: 15
-              }}>
-                Прогресс: {quest.progress} из {quest.goal}
-              </div>
-              <div style={{
-                marginTop: 4,
-                color: "#888",
-                fontSize: 15
-              }}>
-                {quest.status}
-              </div>
-            </div>
-            {/* Прогресс-бар */}
-            <div style={{
-              width: 54,
-              height: 8,
-              background: "#e6e6e6",
-              borderRadius: 5,
-              marginLeft: 12,
-              marginRight: 2,
-              position: "relative",
-              overflow: "hidden"
+              fontWeight: 700,
+              color: "#403688",
+              fontSize: 18,
+              marginBottom: 7
             }}>
+              Квест: {quest.title}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <div style={{
-                width: `${Math.min(quest.progress / quest.goal * 100, 100)}%`,
-                height: "100%",
-                background: "#915ee5",
-                borderRadius: 5,
-                transition: "width .35s"
-              }} />
+                width: 48, height: 48, background: "#ece7ff", borderRadius: 12,
+                display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22
+              }}>🎯</div>
+              <div style={{ flex: 1 }}>
+                <div style={{
+                  fontWeight: 600,
+                  color: "#2a2673",
+                  fontSize: 15
+                }}>
+                  Прогресс: {quest.progress} из {quest.goal}
+                </div>
+                <div style={{
+                  marginTop: 4,
+                  color: "#888"
+                }}>
+                  {quest.status}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* История операций */}
         <div className="card" style={{ background: "#fff" }}>
