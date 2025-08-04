@@ -1,200 +1,160 @@
 import React from "react";
 
 export default function Profile() {
-  // Получение данных из Telegram WebApp API
-  const tgUser =
-    window?.Telegram?.WebApp?.initDataUnsafe?.user || null;
-  const avatarUrl = tgUser?.photo_url || "/avatar-demo.png";
-  const name =
-    (tgUser?.first_name || "Гость") +
-    (tgUser?.last_name ? " " + tgUser.last_name : "");
-
-  // Пример остальных пользовательских данных (можно заменить на реальные)
   const user = {
-    level: "Traveler",
-    levelProgress: 70,
-    bonuses: 1560,
-    id: tgUser?.id ? `TG-${tgUser.id}` : "RK-123456"
+    name: "Иван Иванов",
+    phone: "+7 999 123-45-67",
+    email: "ivan.ivanov@mail.ru",
+    birthday: "2000-05-06",
+    avatar: process.env.PUBLIC_URL + "/avatar-demo.png",
+    gender: "Мужской",
+    card: "1234 5678 0001 1112"
   };
 
+  const birthRu = user.birthday ? user.birthday.split("-").reverse().join(".") : "";
+
   return (
-    <div
-      style={{
-        maxWidth: 430,
-        margin: "0 auto",
-        padding: "1rem",
-        minHeight: "85vh"
-      }}
-    >
+    <div style={{
+      maxWidth: 430, margin: "0 auto", padding: "22px 10px 82px",
+      background: "#f7f7fd", minHeight: "100vh"
+    }}>
       <div
         className="card"
         style={{
-          marginTop: 22,
-          background: "linear-gradient(114deg, #f6f3ff 0%, #e6eaf8 100%)",
-          boxShadow: "0 4px 22px 0 #915ee515",
-          borderRadius: 32,
-          padding: "2.2rem 1.2rem 1.1rem 1.2rem",
-          textAlign: "center"
+          maxWidth: 380,
+          margin: "24px auto",
+          padding: "0 0 22px 0",
+          background: "#fff",
+          borderRadius: 24,
+          boxShadow: "0 2px 18px 0 rgba(145,94,229,0.08)",
+          overflow: "hidden"
         }}
       >
-        <img
-          src={avatarUrl}
-          alt="Профиль"
-          style={{
-            width: 82,
-            height: 82,
-            borderRadius: "50%",
-            objectFit: "cover",
-            border: "3px solid var(--rk-purple)",
-            marginBottom: 8,
-            background: "#f3edfa"
-          }}
-        />
+        {/* Верхний блок с градиентом и аватаром */}
         <div
           style={{
-            fontWeight: 700,
-            fontSize: 22,
-            color: "var(--rk-dark)",
-            marginBottom: 5
+            background: "linear-gradient(98deg, #915ee5 0%, #FF731F 120%)",
+            height: 95,
+            position: "relative",
+            marginBottom: 42
           }}
         >
-          {name}
-        </div>
-        <div
-          style={{
-            color: "var(--rk-blue)",
-            fontWeight: 500,
-            marginBottom: 11
-          }}
-        >
-          Уровень: {user.level}
-        </div>
-
-        {/* Прогресс уровня */}
-        <div
-          style={{
-            background: "#efe7fa",
-            borderRadius: 8,
-            height: 8,
-            width: "84%",
-            margin: "0 auto 10px auto",
-            overflow: "hidden"
-          }}
-        >
-          <div
+          <img
+            src={user.avatar}
+            alt="avatar"
             style={{
-              width: user.levelProgress + "%",
-              height: "100%",
-              borderRadius: 8,
-              background: "linear-gradient(90deg, #ff731f 0%, #915ee5 100%)",
-              transition: "width .3s"
+              width: 86,
+              height: 86,
+              borderRadius: "50%",
+              border: "4px solid #fff",
+              boxShadow: "0 3px 14px #915ee526",
+              position: "absolute",
+              left: "50%",
+              bottom: -43,
+              transform: "translateX(-50%)",
+              objectFit: "cover",
+              transition: "box-shadow .22s"
             }}
           />
         </div>
-        <div
-          style={{
-            color: "#888",
-            fontSize: 14,
-            marginBottom: 11
-          }}
-        >
-          До следующего уровня: <b>{100 - user.levelProgress}%</b>
+        <div style={{
+          marginTop: 15,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center"
+        }}>
+          <div style={{
+            fontWeight: 800,
+            fontSize: 24,
+            color: "#403688",
+            fontFamily: "'Montserrat', Arial, sans-serif",
+            marginBottom: 2
+          }}>{user.name}</div>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 20,
-            margin: "20px 0 10px 0"
-          }}
-        >
-          <div>
-            <div
-              style={{
-                color: "#aaa",
-                fontWeight: 500,
-                fontSize: 14,
-                marginBottom: 1
-              }}
-            >
-              ID гостя
-            </div>
-            <div
-              style={{
-                color: "var(--rk-dark)",
-                fontWeight: 600,
-                fontSize: 16
-              }}
-            >
-              {user.id}
-            </div>
-          </div>
-          <div>
-            <div
-              style={{
-                color: "#aaa",
-                fontWeight: 500,
-                fontSize: 14,
-                marginBottom: 1
-              }}
-            >
-              Бонусы
-            </div>
-            <div
-              style={{
-                color: "#23c27c",
-                fontWeight: 700,
-                fontSize: 17
-              }}
-            >
-              {user.bonuses} баллов
-            </div>
-          </div>
+        {/* Личные данные */}
+        <div style={{
+          margin: "19px 0 7px 0",
+          fontWeight: 700,
+          color: "#403688",
+          fontSize: 16,
+          paddingLeft: 22
+        }}>Личные данные</div>
+        <div style={{
+          padding: "0 22px"
+        }}>
+          <ProfileField label="Пол" value={user.gender} />
+          <ProfileField label="Дата рождения" value={birthRu} />
+        </div>
+        <div style={dividerStyle} />
+
+        {/* Контакты */}
+        <div style={{
+          margin: "13px 0 7px 0",
+          fontWeight: 700,
+          color: "#403688",
+          fontSize: 16,
+          paddingLeft: 22
+        }}>Контакты</div>
+        <div style={{padding:"0 22px"}}>
+          <ProfileField label="Телефон" value={user.phone} />
+          <ProfileField label="E-mail" value={user.email} />
+        </div>
+        <div style={dividerStyle} />
+
+        {/* Карта лояльности */}
+        <div style={{
+          margin: "13px 0 7px 0",
+          fontWeight: 700,
+          color: "#403688",
+          fontSize: 16,
+          paddingLeft: 22
+        }}>Карта лояльности</div>
+        <div style={{padding:"0 22px"}}>
+          <ProfileField label="Номер карты" value={user.card} />
         </div>
 
-        {/* Можно добавить быстрые действия */}
-        <div
+        {/* Кнопка Редактировать */}
+        <button
           style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: 12,
-            marginTop: 18
+            margin: "28px 16px 0 16px",
+            width: "calc(100% - 32px)",
+            border: "none",
+            borderRadius: 12,
+            padding: "13px 0",
+            fontWeight: 700,
+            color: "#fff",
+            background: "linear-gradient(98deg, #915ee5 0%, #FF731F 120%)",
+            fontSize: 17,
+            cursor: "pointer",
+            boxShadow: "0 2px 12px #915ee526"
           }}
+          disabled
+          title="В следующей версии"
         >
-          <a
-            href="#achievements"
-            className="btn-main"
-            style={{
-              background: "var(--rk-gradient)",
-              color: "#fff",
-              fontWeight: 700,
-              borderRadius: 13,
-              fontSize: 16,
-              padding: "10px 20px",
-              textDecoration: "none"
-            }}
-          >
-            Мои достижения
-          </a>
-          <a
-            href="#prizes"
-            className="btn-main"
-            style={{
-              background: "linear-gradient(92deg, #ff731f 0%, #915ee5 100%)",
-              color: "#fff",
-              fontWeight: 700,
-              borderRadius: 13,
-              fontSize: 16,
-              padding: "10px 20px",
-              textDecoration: "none"
-            }}
-          >
-            Мои призы
-          </a>
-        </div>
+          Редактировать профиль
+        </button>
       </div>
     </div>
   );
 }
+
+function ProfileField({ label, value }) {
+  return (
+    <div style={{
+      display: "flex",
+      justifyContent: "space-between",
+      marginBottom: 8,
+      fontSize: 15
+    }}>
+      <div style={{color:"#8f8f8f"}}>{label}</div>
+      <div style={{color:"#333", fontWeight:600, maxWidth:190, textAlign:"right"}}>{value}</div>
+    </div>
+  );
+}
+
+const dividerStyle = {
+  height: 1,
+  background: "#ece7ff",
+  margin: "18px 0"
+};

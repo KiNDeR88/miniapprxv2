@@ -1,20 +1,16 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import Profile from "./components/Profile";
 import Achievements from "./components/Achievements";
-import History from "./components/History"; // Импортируй History
+import History from "./components/History";
 import Tabs from "./components/Tabs";
+import "./style.css";
 
 export default function App() {
   return (
-    <Router>
-      <div style={{
-        minHeight: "100vh",
-        background: "#fff",
-        position: "relative",
-        paddingBottom: 66 // чтобы контент не перекрывался меню
-      }}>
+    <Router basename={process.env.PUBLIC_URL || "/"}>
+      <div className="app-container">
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/history" element={<History />} />

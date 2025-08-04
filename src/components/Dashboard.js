@@ -1,32 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import { useKeenSlider } from "keen-slider/react";
+
+const promotions = [
+  process.env.PUBLIC_URL + "/promo-1.jpg",
+  process.env.PUBLIC_URL + "/promo-2.jpg",
+  process.env.PUBLIC_URL + "/promo-3.jpg"
+];
 
 const SHOP_URL = "https://shop.rosaski.com/";
 
 export default function Dashboard() {
-  // Мок-данные пользователя
   const user = {
     name: "Иван Иванов",
     phone: "79991234567",
-    avatar: "/avatar-demo.png"
+    avatar: process.env.PUBLIC_URL + "/avatar-demo.png"
   };
-  // Мок-баланс
   const balance = { bonus: 2350 };
-  // Мок-история операций
   const history = [
     { id: "1", date: "2024-07-01", description: "Покупка в ресторане", amount: 100 },
     { id: "2", date: "2024-06-30", description: "Начисление за регистрацию", amount: 50 },
     { id: "3", date: "2024-06-27", description: "Потрачено в интернет-магазине", amount: -300 }
   ];
-  // Мок-квест
   const quest = {
     title: "Купи в 3-х разных локациях",
+    description: "Совершите покупки в 3 разных точках на курорте и получите награду.",
     progress: 2,
     goal: 3,
     status: "В ожидании"
   };
 
-  // Для модалок
+  const [sliderRef, instanceRef] = useKeenSlider({ loop: true });
+  const [promoIdx, setPromoIdx] = useState(0);
+
+  useEffect(() => {
+    if (!instanceRef.current) return;
+    const unsub = instanceRef.current.on("detailsChanged", s => setPromoIdx(s.track.details.rel));
+    return () => unsub && unsub();
+  }, [instanceRef]);
+
   const [showQR, setShowQR] = useState(false);
   const [showShop, setShowShop] = useState(false);
 
@@ -38,17 +50,28 @@ export default function Dashboard() {
       position: "relative",
       zIndex: 1
     }}>
-      {/* Шапка */}
-      <header className="header">
-        <img src="/logo.svg" alt="Роза Хутор" className="logo-rk" />
-        <div style={{
-          fontWeight: 700,
-          fontSize: 28,
-          color: "#050F58",
-          letterSpacing: ".01em"
-        }}>
-          Роза Хутор
-        </div>
+      {/* Шапка с крупным логотипом */}
+      <header
+        className="header"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",   // Поставь 'flex-start' если нужен левый край!
+          padding: "28px 0 8px 0"
+        }}
+      >
+        <img
+          src={process.env.PUBLIC_URL + "/logo.png"}
+          alt="Роза Хутор"
+          loading="eager"
+          style={{
+            height: 60,           // ← Измени здесь на 44 или 48 если надо больше
+            width: "auto",
+            maxWidth: 170,
+            objectFit: "contain",
+            display: "block"
+          }}
+        />
       </header>
 
       <main style={{ maxWidth: 430, margin: "0 auto", padding: "1rem" }}>
@@ -113,40 +136,130 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Квест */}
-        {quest && (
-          <div className="card" style={{ marginBottom: 18, background: "#fafaff" }}>
-            <div style={{
-              fontWeight: 700,
-              color: "#403688",
-              fontSize: 18,
-              marginBottom: 7
-            }}>
-              Квест: {quest.title}
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        {/* Промо-слайдер */}
+        <div className="promo-slider keen-slider" ref={sliderRef} style={{
+          marginBottom: 18, minHeight: 128
+        }}>
+          {promotions.map((src, idx) => (
+            <div className="keen-slider__slide" key={idx}>
               <div style={{
-                width: 48, height: 48, background: "#ece7ff", borderRadius: 12,
-                display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22
-              }}>🎯</div>
-              <div style={{ flex: 1 }}>
-                <div style={{
-                  fontWeight: 600,
-                  color: "#2a2673",
-                  fontSize: 15
-                }}>
-                  Прогресс: {quest.progress} из {quest.goal}
-                </div>
-                <div style={{
-                  marginTop: 4,
-                  color: "#888"
-                }}>
-                  {quest.status}
-                </div>
+                borderRadius: 16,
+                overflow: "hidden",
+                boxShadow: "0 1px 8px 0 rgba(35, 47, 89, 0.07)",
+                aspectRatio: "16 / 9",
+                background: "#f8f5ff",
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minHeight: 128,
+                maxHeight: 220
+              }}>
+                <img
+                  src={src}
+                  alt={`promo${idx + 1}`}
+                  loading="lazy"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    display: "block",
+                    aspectRatio: "16/9",
+                    background: "#ede9fa"
+                  }}
+                />
               </div>
             </div>
+          ))}
+        </div>
+        {/* Индикаторы */}
+        <div style={{
+          display: "flex", justifyContent: "center", gap: 7, marginTop: 5, marginBottom: 12
+        }}>
+          {promotions.map((_, i) => (
+            <div key={i}
+                 onClick={() => instanceRef.current?.moveToIdx(i)}
+                 style={{
+                   width: 8, height: 8, borderRadius: 4,
+                   background: i === promoIdx ? "#915ee5" : "#ccc",
+                   cursor: "pointer"
+                 }} />
+          ))}
+        </div>
+
+        {/* Квест-блок */}
+        <div className="card" style={{
+          marginBottom: 18,
+          background: "#fafaff",
+          padding: "1.1em 1em"
+        }}>
+          <div style={{
+            fontWeight: 700,
+            color: "#403688",
+            fontSize: 18,
+            marginBottom: 7
+          }}>
+            Квест: {quest.title}
           </div>
-        )}
+          <div style={{
+            marginBottom: 5,
+            color: "#666",
+            fontSize: 15
+          }}>
+            {quest.description}
+          </div>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12
+          }}>
+            <div style={{
+              width: 42,
+              height: 42,
+              background: "#ece7ff",
+              borderRadius: 12,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 22
+            }}>🎯</div>
+            <div style={{ flex: 1 }}>
+              <div style={{
+                fontWeight: 600,
+                color: "#2a2673",
+                fontSize: 15
+              }}>
+                Прогресс: {quest.progress} из {quest.goal}
+              </div>
+              <div style={{
+                marginTop: 4,
+                color: "#888",
+                fontSize: 15
+              }}>
+                {quest.status}
+              </div>
+            </div>
+            {/* Прогресс-бар */}
+            <div style={{
+              width: 54,
+              height: 8,
+              background: "#e6e6e6",
+              borderRadius: 5,
+              marginLeft: 12,
+              marginRight: 2,
+              position: "relative",
+              overflow: "hidden"
+            }}>
+              <div style={{
+                width: `${Math.min(quest.progress / quest.goal * 100, 100)}%`,
+                height: "100%",
+                background: "#915ee5",
+                borderRadius: 5,
+                transition: "width .35s"
+              }} />
+            </div>
+          </div>
+        </div>
 
         {/* История операций */}
         <div className="card" style={{ background: "#fff" }}>
@@ -158,7 +271,7 @@ export default function Dashboard() {
           }}>
             Последние операции
           </div>
-          {history.length === 0 && <div style={{color:"#888",margin:"1.1em 0"}}>Нет операций</div>}
+          {history.length === 0 && <div style={{ color: "#888", margin: "1.1em 0" }}>Нет операций</div>}
           <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
             {history.map(tx => (
               <div
@@ -174,7 +287,7 @@ export default function Dashboard() {
                 }}
               >
                 <span style={{ flex: 1 }}>
-                  {tx.description} <span style={{color:"#888",fontSize:13}}>({tx.date})</span>
+                  {tx.description} <span style={{ color: "#888", fontSize: 13 }}>({tx.date})</span>
                 </span>
                 <span style={{
                   color: tx.amount > 0 ? "#23c27c" : "#eb5957",

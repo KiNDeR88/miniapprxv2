@@ -1,244 +1,125 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,700&display=swap');
+@import "keen-slider/keen-slider.min.css";
 
-:root {
-  --rk-blueberry: #050F58;
-  --rk-purple: #915ee5;
-  --rk-dark: #1b1846;
-  --rk-orange: #FF731F;
-  --rk-blue: #4FA6ED;
-  --rk-green: #03B84A;
-  --rk-light: #edeaf7;
-  --rk-white: #fff;
-  --rk-gradient: linear-gradient(97deg, #915ee5 60%, #FF731F 100%);
-  --rk-shadow: 0 4px 22px 0 #915ee515;
-}
-
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  background: var(--rk-white) !important;
-  font-family: 'Montserrat', Arial, sans-serif;
-  color: var(--rk-dark);
-  -webkit-tap-highlight-color: transparent;
-}
-
-#root {
-  min-height: 100vh;
-  background: var(--rk-white);
-}
-
-.card {
-  background: var(--rk-white);
-  border-radius: 32px;
-  box-shadow: var(--rk-shadow);
-  margin: 18px 0;
-  padding: 1.5rem 1.2rem;
-  max-width: 540px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.header {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  padding: 1.5rem 1.3rem 0.3rem 1.3rem;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  background: transparent;
-  box-sizing: border-box;
-}
-.logo-rk {
-  width: 54px;
-  height: 54px;
-  margin-right: 10px;
-  object-fit: contain;
-}
-
-/* Нижнее меню и tab-item */
-.tabs-bar {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100vw;
-  max-width: 500px;
-  margin: 0 auto;
-  height: 70px;
-  background: #fff;
-  border-top: 2px solid var(--rk-light);
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-  z-index: 100;
-  box-shadow: 0 -3px 30px #8b62d719;
-  padding: 0 8px;
-  padding-bottom: env(safe-area-inset-bottom, 0);
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-.tab-item {
-  flex: 1 1 0;
-  min-width: 0;
-  height: 100%;
-  margin: 0 3px;
-  border: none;
-  background: none;
-  color: var(--rk-dark);
-  border-radius: 18px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-weight: 500;
-  font-size: 13.5px;
-  letter-spacing: .02em;
-  cursor: pointer;
-  outline: none;
-  transition: all .17s;
-  box-sizing: border-box;
-  user-select: none;
-  min-width: 56px;
-  max-width: 140px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-.tab-item.active {
-  background: var(--rk-gradient);
-  color: #fff;
-  box-shadow: 0 2px 16px #915ee536;
-  font-weight: 700;
-}
-
-.tab-item > div:first-child {
-  font-size: 22px;
-  margin-bottom: 1px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.tab-item > div:last-child {
-  margin-top: 2px;
-  font-family: 'Montserrat', Arial, sans-serif;
-  letter-spacing: .01em;
-  text-align: center;
-  width: 100%;
-  font-size: 12.5px;
-  line-height: 1.09;
-}
-
-/* КОМПАКТНЫЕ КНОПКИ */
-.btn-main, .wheel-spin-btn, .dashboard-actions button {
-  background: var(--rk-gradient);
-  color: #fff;
-  font-family: 'Montserrat', Arial, sans-serif;
-  font-weight: 600;
-  border: none;
-  border-radius: 16px;
-  font-size: 17px;
-  padding: 11px 0;
-  margin: 0;
-  cursor: pointer;
-  box-shadow: 0 2px 10px #915ee522;
-  letter-spacing: .01em;
-  transition: all .14s;
-  width: 100%;
-  line-height: 1.15;
-}
-.dashboard-actions button:last-child {
-  background: #FF731F !important;
-}
-
-.btn-main:active, .wheel-spin-btn:active, .dashboard-actions button:active {
-  filter: brightness(0.95);
-  box-shadow: 0 1px 6px #915ee52d;
-}
-.btn-main[disabled], .wheel-spin-btn[disabled], .dashboard-actions button[disabled] {
-  opacity: .55;
-  cursor: not-allowed;
-}
-
-a.btn-main {
-  text-decoration: none;
-  display: inline-block;
-}
-
-/* Модалки */
-.congrats-modal {
-  position: fixed;
-  z-index: 2000;
-  left: 0; top: 0; right: 0; bottom: 0;
-  background: rgba(24,14,55, 0.09);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: modalShow .18s;
-}
-@keyframes modalShow {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-.congrats-content {
-  background: #fff;
-  border-radius: 27px;
-  box-shadow: 0 4px 32px #a587f722;
-  padding: 2.2rem 1.3rem;
-  min-width: 240px;
-  max-width: 95vw;
-  max-height: 89vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  animation: pop .25s;
-}
-@keyframes pop {
-  0% { transform: scale(.78);}
-  80% { transform: scale(1.13);}
-  100% { transform: scale(1);}
-}
-.congrats-content iframe {
-  border: none;
-  width: 100%;
-  height: 70vh;
-  background: #fff;
-}
-
-::-webkit-scrollbar { width: 0; height: 0; }
-
-@media (max-width: 600px) {
+body, html, #root, .app-container {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    font-family: 'Montserrat', Arial, sans-serif;
+  }
+  
+  /* Card-like containers */
   .card {
-    border-radius: 17px;
-    padding: 1.2rem 0.7rem;
-    margin: 11px 0;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 1px 10px 0 rgba(35, 47, 89, 0.07);
+    padding: 20px 18px;
+    margin-bottom: 14px;
   }
+  
   .header {
-    padding: 1.05rem 0.7rem 0.3rem 0.7rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 0 0 0;
   }
-  .tabs-bar {
+  
+  .logo-rk {
+    width: 55px;
     height: 55px;
-    padding: 0 1px;
-    max-width: 100vw;
+    margin-bottom: 8px;
+  }
+  
+  .dashboard-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .btn-main {
+    flex: 1;
+    font-size: 15px;
+    padding: 11px 0;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    background: linear-gradient(98deg, #915ee5 0%, #FF731F 130%);
+    cursor: pointer;
+    transition: background 0.18s;
+  }
+  .btn-main:active { opacity: .8; }
+  
+  .tabs-bar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 50;
+    background: #faf8ff;
+    display: flex;
+    box-shadow: 0 -1px 10px 0 rgba(35, 47, 89, 0.07);
+    border-top: 1.5px solid #ece7ff;
+    height: 66px;
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
   .tab-item {
-    font-size: 11.5px;
-    border-radius: 11px;
-    min-width: 48px;
-    margin: 0 1.5px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: #915ee5;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s;
+    user-select: none;
+    height: 100%;
   }
-  .tab-item > div:first-child {
-    font-size: 19px;
+  .tab-item.active {
+    color: #FF731F;
+    background: #f3eaff;
   }
-  .tab-item > div:last-child {
-    font-size: 11px;
+  
+  .congrats-modal {
+    position: fixed;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background: rgba(36,34,51,0.16);
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: modalFadeIn .2s;
   }
-  .dashboard-actions button {
-    font-size: 15px;
-    padding: 8px 0;
-    border-radius: 12px;
+  @keyframes modalFadeIn { from { opacity:0; } to { opacity:1; } }
+  .congrats-content {
+    background: #fff;
+    border-radius: 20px;
+    padding: 2.2rem 1.5rem;
+    box-shadow: 0 1.5px 14px 0 rgba(35, 47, 89, 0.11);
+    max-width: 98vw;
   }
-}
+  .wheel-spin-btn {
+    background: linear-gradient(98deg, #915ee5 0%, #FF731F 130%);
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  
+  @media (max-width: 600px) {
+    .app-container { padding-bottom: 70px; }
+    .card { padding: 14px 8px; }
+    .header { padding-top: 12px; }
+    .logo-rk { width: 40px; height: 40px; }
+    .congrats-content { padding: 1.1rem 0.7rem; }
+    .btn-main { padding: 10px 0; font-size: 14px; }
+  }
+  .promo-slider {
+    margin-bottom: 22px;
+  }
+  .promo-card {
+    min-width: 0; /* не тянет вширь */
+  }
