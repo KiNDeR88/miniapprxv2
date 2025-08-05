@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "description": "Мини-приложение Telegram для программы лояльности и геймификации Роза Хутор",
-    "homepage": "https://kinder88.github.io/miniapprx",
+    "homepage": "https://kinder88.github.io/miniapprxv2",
     "dependencies": {
         "cors": "^2.8.5",
         "express": "^5.1.0",
