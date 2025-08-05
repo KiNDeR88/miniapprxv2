@@ -1,30 +1,155 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
+import ReceiptModal from "./ReceiptModal";
+import PromoModal from "./PromoModal";
 
+// Промо-акции
 const promotions = [
-  process.env.PUBLIC_URL + "/promo-1.jpg",
-  process.env.PUBLIC_URL + "/promo-2.jpg",
-  process.env.PUBLIC_URL + "/promo-3.jpg"
+  {
+    img: process.env.PUBLIC_URL + "/promo-1.jpg",
+    title: "Главная акция июля",
+    desc: "Получите 500 баллов при первой покупке на Роза Плато!"
+  },
+  {
+    img: process.env.PUBLIC_URL + "/promo-2.jpg",
+    title: "Бонус за регистрацию",
+    desc: "Зарегистрируйтесь в приложении и получите 100 бонусов."
+  },
+  {
+    img: process.env.PUBLIC_URL + "/promo-3.jpg",
+    title: "Розыгрыш призов",
+    desc: "Совершите покупки в 3-х точках и участвуйте в розыгрыше!"
+  }
 ];
 
 const SHOP_URL = "https://shop.rosaski.com/";
 
-export default function Dashboard() {
+// --- QRModal как отдельный компонент ---
+function QRModal({ user, open, onClose }) {
+  const modalRef = useRef(null);
+
+  // Swipe-вниз для закрытия на мобильных
+  useEffect(() => {
+    if (!open) return;
+    let startY = null;
+    function handleTouchStart(e) {
+      if (e.touches.length === 1) startY = e.touches[0].clientY;
+    }
+    function handleTouchMove(e) {
+      if (startY !== null && e.touches.length === 1) {
+        const diff = e.touches[0].clientY - startY;
+        if (diff > 70) {
+          onClose();
+          startY = null;
+        }
+      }
+    }
+    const node = modalRef.current;
+    node?.addEventListener("touchstart", handleTouchStart);
+    node?.addEventListener("touchmove", handleTouchMove);
+    return () => {
+      node?.removeEventListener("touchstart", handleTouchStart);
+      node?.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+  return (
+    <div className="congrats-modal" onClick={onClose}>
+      <div
+        ref={modalRef}
+        className="congrats-content qr-modal"
+        style={{
+          minWidth: 260,
+          maxWidth: 350,
+          padding: "2.1rem 1.2rem 2.3rem",
+          borderRadius: 25,
+          background: "#fff",
+          animation: "slideUp .25s cubic-bezier(.7,0,0,1)"
+        }}
+        onClick={e => e.stopPropagation()}
+      >
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 18 }}>
+          <img
+            src={user.avatar}
+            alt="avatar"
+            style={{
+              width: 54,
+              height: 54,
+              borderRadius: "50%",
+              border: "2.5px solid #915ee5",
+              objectFit: "cover",
+              marginBottom: 4
+            }}
+          />
+        </div>
+        <div
+          style={{
+            marginBottom: 14,
+            fontWeight: 700,
+            fontSize: 22,
+            color: "#050F58",
+            textAlign: "center"
+          }}
+        >
+          Ваш QR-код гостя
+        </div>
+        <div
+          style={{
+            background: "#fafaff",
+            borderRadius: 17,
+            padding: 16,
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: 10,
+            boxShadow: "0 1.5px 10px #915ee522"
+          }}
+        >
+          <QRCodeSVG value={user.phone} size={142} bgColor="#fff" fgColor="#403688" />
+        </div>
+        <div style={{ marginTop: 12, color: "#888", fontSize: 16, textAlign: "center" }}>
+          Покажите этот QR на кассе для начисления баллов
+        </div>
+        <button
+          className="wheel-spin-btn"
+          style={{
+            marginTop: 18,
+            fontSize: 17,
+            background: "linear-gradient(98deg, #915ee5 0%, #FF731F 100%)"
+          }}
+          onClick={onClose}
+        >
+          Закрыть
+        </button>
+        {/* Анимация */}
+        <style>
+          {`
+            @keyframes slideUp {
+              from { transform: translateY(120px); opacity: 0.72; }
+              to   { transform: translateY(0); opacity: 1; }
+            }
+          `}
+        </style>
+      </div>
+    </div>
+  );
+}
+
+// --- Основной Dashboard ---
+export default function Dashboard({ history }) {
   const user = {
     name: "Иван Иванов",
     phone: "79991234567",
     avatar: process.env.PUBLIC_URL + "/avatar-demo.png"
   };
   const balance = { bonus: 2350 };
-  const history = [
-    { id: "1", date: "2024-07-01", description: "Покупка в ресторане", amount: 100 },
-    { id: "2", date: "2024-06-30", description: "Начисление за регистрацию", amount: 50 },
-    { id: "3", date: "2024-06-27", description: "Потрачено в интернет-магазине", amount: -300 }
-  ];
+
+  // Квест переименован в Кэшбэк-тур
   const quest = {
-    title: "Купи в 3-х разных локациях",
-    description: "Совершите покупки в 3 разных точках на курорте и получите награду.",
+    title: "Кэшбэк-тур",
+    description: "Совершите покупки в 3 разных точках курорта и получите кэшбэк-бонус!",
     progress: 2,
     goal: 3,
     status: "В ожидании"
@@ -33,14 +158,17 @@ export default function Dashboard() {
   const [sliderRef, instanceRef] = useKeenSlider({ loop: true });
   const [promoIdx, setPromoIdx] = useState(0);
 
+  // Модалки
+  const [openedPromo, setOpenedPromo] = useState(null);
+  const [showQR, setShowQR] = useState(false);
+  const [showShop, setShowShop] = useState(false);
+  const [selectedReceipt, setSelectedReceipt] = useState(null);
+
   useEffect(() => {
     if (!instanceRef.current) return;
     const unsub = instanceRef.current.on("detailsChanged", s => setPromoIdx(s.track.details.rel));
     return () => unsub && unsub();
   }, [instanceRef]);
-
-  const [showQR, setShowQR] = useState(false);
-  const [showShop, setShowShop] = useState(false);
 
   return (
     <div style={{
@@ -50,26 +178,12 @@ export default function Dashboard() {
       position: "relative",
       zIndex: 1
     }}>
-      <header
-        className="header"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "28px 0 8px 0"
-        }}
-      >
+      {/* Flex-шапка с крупным логотипом */}
+      <header className="header">
         <img
           src={process.env.PUBLIC_URL + "/logo.png"}
           alt="Роза Хутор"
-          loading="eager"
-          style={{
-            height: 60,
-            width: "auto",
-            maxWidth: 170,
-            objectFit: "contain",
-            display: "block"
-          }}
+          className="roza-logo"
         />
       </header>
 
@@ -134,27 +248,32 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* Промо-слайдер */}
         <div className="promo-slider keen-slider" ref={sliderRef} style={{
           marginBottom: 18, minHeight: 128
         }}>
-          {promotions.map((src, idx) => (
+          {promotions.map((promo, idx) => (
             <div className="keen-slider__slide" key={idx}>
-              <div style={{
-                borderRadius: 16,
-                overflow: "hidden",
-                boxShadow: "0 1px 8px 0 rgba(35, 47, 89, 0.07)",
-                aspectRatio: "16 / 9",
-                background: "#f8f5ff",
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                minHeight: 128,
-                maxHeight: 220
-              }}>
+              <div
+                style={{
+                  borderRadius: 16,
+                  overflow: "hidden",
+                  boxShadow: "0 1px 8px 0 rgba(35, 47, 89, 0.07)",
+                  aspectRatio: "16 / 9",
+                  background: "#f8f5ff",
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  minHeight: 128,
+                  maxHeight: 220,
+                  cursor: "pointer"
+                }}
+                onClick={() => setOpenedPromo(promo)}
+              >
                 <img
-                  src={src}
-                  alt={`promo${idx + 1}`}
+                  src={promo.img}
+                  alt={promo.title}
                   loading="lazy"
                   style={{
                     width: "100%",
@@ -183,6 +302,7 @@ export default function Dashboard() {
           ))}
         </div>
 
+        {/* Кэшбэк-тур */}
         <div className="card" style={{
           marginBottom: 18,
           background: "#fafaff",
@@ -194,7 +314,7 @@ export default function Dashboard() {
             fontSize: 18,
             marginBottom: 7
           }}>
-            Квест: {quest.title}
+            {quest.title}
           </div>
           <div style={{
             marginBottom: 5,
@@ -255,6 +375,7 @@ export default function Dashboard() {
           </div>
         </div>
 
+        {/* История операций */}
         <div className="card" style={{ background: "#fff" }}>
           <div style={{
             fontWeight: 700,
@@ -264,9 +385,9 @@ export default function Dashboard() {
           }}>
             Последние операции
           </div>
-          {history.length === 0 && <div style={{ color: "#888", margin: "1.1em 0" }}>Нет операций</div>}
+          {history && history.length === 0 && <div style={{ color: "#888", margin: "1.1em 0" }}>Нет операций</div>}
           <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-            {history.map(tx => (
+            {history && history.map(tx => (
               <div
                 key={tx.id || tx.date + tx.amount}
                 style={{
@@ -276,8 +397,11 @@ export default function Dashboard() {
                   display: "flex",
                   alignItems: "center",
                   gap: 10,
-                  fontSize: 15
+                  fontSize: 15,
+                  cursor: tx.receipt ? "pointer" : "default",
+                  opacity: tx.receipt ? 1 : 0.65
                 }}
+                onClick={() => tx.receipt && setSelectedReceipt(tx)}
               >
                 <span style={{ flex: 1 }}>
                   {tx.description} <span style={{ color: "#888", fontSize: 13 }}>({tx.date})</span>
@@ -294,44 +418,10 @@ export default function Dashboard() {
         </div>
       </main>
 
-      {showQR && (
-        <div className="congrats-modal" onClick={() => setShowQR(false)}>
-          <div
-            className="congrats-content"
-            style={{ minWidth: 240, padding: "2.2rem 1.3rem" }}
-            onClick={e => e.stopPropagation()}
-          >
-            <div
-              style={{
-                marginBottom: 14,
-                fontWeight: 700,
-                fontSize: 23,
-                color: "#050F58",
-                fontFamily: "'Montserrat', Arial, sans-serif"
-              }}
-            >
-              Ваш QR-код гостя
-            </div>
-            <QRCodeSVG value={user.phone} size={160} bgColor="#fff" fgColor="#050f58" />
-            <div style={{ marginTop: 16, color: "#888", fontSize: 16 }}>
-              Покажите этот QR на кассе для начисления баллов
-            </div>
-            <button
-              className="wheel-spin-btn"
-              style={{
-                marginTop: 18,
-                fontSize: 17,
-                background: "linear-gradient(98deg, #915ee5 0%, #FF731F 100%)",
-                fontFamily: "'Montserrat', Arial, sans-serif"
-              }}
-              onClick={() => setShowQR(false)}
-            >
-              Закрыть
-            </button>
-          </div>
-        </div>
-      )}
+      {/* QR-код */}
+      <QRModal user={user} open={showQR} onClose={() => setShowQR(false)} />
 
+      {/* Интернет-магазин */}
       {showShop && (
         <div className="congrats-modal" onClick={() => setShowShop(false)}>
           <div
@@ -389,6 +479,12 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* Модалка акции */}
+      <PromoModal promo={openedPromo} onClose={() => setOpenedPromo(null)} />
+
+      {/* Модалка чека */}
+      <ReceiptModal tx={selectedReceipt} onClose={() => setSelectedReceipt(null)} />
     </div>
   );
 }
