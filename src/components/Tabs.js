@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { FaHome, FaHistory, FaTrophy, FaUser } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 
