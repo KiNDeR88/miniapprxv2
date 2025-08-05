@@ -50,13 +50,12 @@ export default function Dashboard() {
       position: "relative",
       zIndex: 1
     }}>
-      {/* Шапка с крупным логотипом */}
       <header
         className="header"
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",   // Поставь 'flex-start' если нужен левый край!
+          justifyContent: "center",
           padding: "28px 0 8px 0"
         }}
       >
@@ -65,7 +64,7 @@ export default function Dashboard() {
           alt="Роза Хутор"
           loading="eager"
           style={{
-            height: 60,           // ← Измени здесь на 44 или 48 если надо больше
+            height: 60,
             width: "auto",
             maxWidth: 170,
             objectFit: "contain",
@@ -75,7 +74,6 @@ export default function Dashboard() {
       </header>
 
       <main style={{ maxWidth: 430, margin: "0 auto", padding: "1rem" }}>
-        {/* Карточка профиля */}
         <div className="card" style={{ margin: "22px 0 18px 0", background: "#fff" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <img
@@ -136,7 +134,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Промо-слайдер */}
         <div className="promo-slider keen-slider" ref={sliderRef} style={{
           marginBottom: 18, minHeight: 128
         }}>
@@ -172,7 +169,6 @@ export default function Dashboard() {
             </div>
           ))}
         </div>
-        {/* Индикаторы */}
         <div style={{
           display: "flex", justifyContent: "center", gap: 7, marginTop: 5, marginBottom: 12
         }}>
@@ -187,7 +183,6 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* Квест-блок */}
         <div className="card" style={{
           marginBottom: 18,
           background: "#fafaff",
@@ -239,7 +234,6 @@ export default function Dashboard() {
                 {quest.status}
               </div>
             </div>
-            {/* Прогресс-бар */}
             <div style={{
               width: 54,
               height: 8,
@@ -261,7 +255,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* История операций */}
         <div className="card" style={{ background: "#fff" }}>
           <div style={{
             fontWeight: 700,
@@ -301,7 +294,6 @@ export default function Dashboard() {
         </div>
       </main>
 
-      {/* Модалка с QR-кодом */}
       {showQR && (
         <div className="congrats-modal" onClick={() => setShowQR(false)}>
           <div
@@ -340,7 +332,6 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Модалка интернет-магазина */}
       {showShop && (
         <div className="congrats-modal" onClick={() => setShowShop(false)}>
           <div
