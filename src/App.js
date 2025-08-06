@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import Profile from "./components/Profile";
 import Achievements from "./components/Achievements";
@@ -56,17 +56,15 @@ export default function App() {
   const [history, setHistory] = useState(initialHistory);
 
   return (
-    <Router basename={process.env.PUBLIC_URL || "/"}>
-      <div className="app-container">
-        <Routes>
-          <Route path="/" element={<Dashboard history={history} />} />
-          <Route path="/history" element={<History history={history} />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/achievements" element={<Achievements />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-        <Tabs />
-      </div>
-    </Router>
+    <div className="app-container">
+      <Routes>
+        <Route path="/" element={<Dashboard history={history} />} />
+        <Route path="/history" element={<History history={history} />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/achievements" element={<Achievements />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <Tabs />
+    </div>
   );
 }

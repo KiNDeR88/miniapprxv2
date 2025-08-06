@@ -150,7 +150,7 @@ export default function Dashboard({ history }) {
   const quest = {
     title: "Кэшбэк-тур",
     description: "Совершите покупки в 3 разных точках курорта и получите кэшбэк-бонус!",
-    progress: 2,
+    progress: 1, // Поставь здесь 3 для теста — тогда кнопка будет активна!
     goal: 3,
     status: "В ожидании"
   };
@@ -163,6 +163,9 @@ export default function Dashboard({ history }) {
   const [showQR, setShowQR] = useState(false);
   const [showShop, setShowShop] = useState(false);
   const [selectedReceipt, setSelectedReceipt] = useState(null);
+
+  // Состояние "забрали кэшбэк"
+  const [cashbackTaken, setCashbackTaken] = useState(false);
 
   useEffect(() => {
     if (!instanceRef.current) return;
@@ -178,12 +181,26 @@ export default function Dashboard({ history }) {
       position: "relative",
       zIndex: 1
     }}>
-      {/* Flex-шапка с крупным логотипом */}
-      <header className="header">
+      {/* --- УМЕНЬШЕННЫЙ ХЕДЕР --- */}
+      <header className="header" style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: 48,
+        background: "#fff",
+        boxShadow: "0 1px 10px #d3c8f440",
+        marginBottom: 8
+      }}>
         <img
           src={process.env.PUBLIC_URL + "/logo.png"}
           alt="Роза Хутор"
-          className="roza-logo"
+          style={{
+            height: 32,
+            width: "auto",
+            maxWidth: 170,
+            objectFit: "contain",
+            display: "block"
+          }}
         />
       </header>
 
@@ -373,6 +390,35 @@ export default function Dashboard({ history }) {
               }} />
             </div>
           </div>
+          {/* КНОПКА за квест — только если квест выполнен */}
+          <button
+            disabled={quest.progress < quest.goal || cashbackTaken}
+            style={{
+              marginTop: 16,
+              fontSize: 16,
+              background: quest.progress >= quest.goal && !cashbackTaken
+                ? "linear-gradient(98deg, #23c27c 0%, #915ee5 100%)"
+                : "#ece7ff",
+              color: quest.progress >= quest.goal && !cashbackTaken ? "#fff" : "#bbb",
+              border: "none",
+              borderRadius: 10,
+              fontWeight: 700,
+              padding: "13px 0",
+              width: "100%",
+              cursor: quest.progress >= quest.goal && !cashbackTaken ? "pointer" : "not-allowed",
+              boxShadow: quest.progress >= quest.goal && !cashbackTaken ? "0 1px 9px #23c27c22" : "none",
+              transition: "all .2s"
+            }}
+            onClick={() => {
+              if (quest.progress >= quest.goal && !cashbackTaken) {
+                setCashbackTaken(true);
+                alert("Поздравляем! Кэшбэк получен 🎉");
+                // тут твоя логика начисления бонуса
+              }
+            }}
+          >
+            {cashbackTaken ? "Кэшбэк уже получен" : "Забрать кэшбэк"}
+          </button>
         </div>
 
         {/* История операций */}
